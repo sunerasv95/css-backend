@@ -10,5 +10,12 @@
     "password": "",
     "database": "css_db",
     "synchronize": true
+  },
+  "jwt": {
+    "secret": "Highsecret123",
+    "expiresIn": "60s"
+  },
+  "encryption": {
+    "hashSalt": 12
   }
 }

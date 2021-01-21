@@ -4,8 +4,8 @@ import { ListingService } from './listing.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ListingRepository } from './listing.repository';
-import { CategoryRepository } from 'src/modules/category/category.repository';
-import { CategoryModule } from 'src/modules/category/category.module';
+import { CategoryRepository } from './../category/category.repository';
+import { CategoryModule } from './../category/category.module';
 
 @Module({
   imports: [
