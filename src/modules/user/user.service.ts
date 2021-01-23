@@ -7,11 +7,11 @@ import {UserRepository} from './user.repository';
 export class UserService {
     constructor(private userRepositry: UserRepository){}
 
-    async findUserByUsername(data:any){
-        return this.userRepositry.findOne({ username: data.username });
+    async findUserByUsername(username: string){
+        return await this.userRepositry.findOne({ username: username });
     }
 
     async createUser(userData: CreateUserDto): Promise<any>{
-        return this.userRepositry.createNewUser(userData);
+        return await this.userRepositry.createNewUser(userData);
     }
 }

@@ -7,27 +7,23 @@ import User from "./user.entity";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
+	async createNewUser(userData: CreateUserDto): Promise<any> {
+		const user = await this.findOne({ username: userData.username });
+		if (user) {
+			throw new HttpException("Username is exists", HttpStatus.BAD_REQUEST);
+		}
 
-    constructor(private readonly encryptionService: EncryptionService) { 
-        super();
-    }
+		const entity = new User();
 
-    async createNewUser(userData: CreateUserDto): Promise<any> {
-        const user = await this.findOne({ username: userData.username });
-        if(user){
-            throw new HttpException('Username is exists', HttpStatus.BAD_REQUEST);
-        }
+		entity.firstName = userData.firstName;
+		entity.lastName = userData.lastName;
+		entity.email = userData.email;
+		entity.username = userData.username;
+		entity.password = userData.password;
+		entity.isActive = 1;
 
-        const entity = new User();
-
-        entity.firstName  = userData.firstName;
-        entity.lastName   = userData.lastName;
-        entity.username   = userData.username;
-        entity.password   = await this.encryptionService.hashPassword(userData.password);
-        entity.isActive   = 1;
-
-        await this.save(entity);
-        const { password, ...result} = entity;
-        return result;
-    }
+		await this.save(entity);
+		const { password, ...result } = entity;
+		return result;
+	}
 }

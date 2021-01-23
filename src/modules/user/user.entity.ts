@@ -1,5 +1,5 @@
 import { BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
-import * as bcrypt from 'bcrypt';
+import { hashSync } from 'bcrypt';
 
 @Entity()
 export default class User{
@@ -37,8 +37,8 @@ export default class User{
     @DeleteDateColumn({ type: 'timestamp' })
     deletedAt: Date
 
-    // @BeforeInsert()
-    // async hashPassword(){
-    //     this.password = await bcrypt.hash(this.password, 10);
-    // }
+    @BeforeInsert()
+    async hashPassword(){
+        this.password = hashSync(this.password, 10);
+    }
 }

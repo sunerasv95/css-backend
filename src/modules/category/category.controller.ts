@@ -6,12 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { Category } from './category.entity';
 import { CategoryService } from './category.service';
 import { CreateCatDto } from './dto/create-category.dto';
 import { CatIdDto } from './dto/category-id.dto';
 import { UpdateCatDto } from './dto/update-category.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('api/categories')
 export class CategoryController {
@@ -27,6 +29,7 @@ export class CategoryController {
     return await this.categoryService.findOneCategory(id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() catData: CreateCatDto): Promise<Category> {
     return await this.categoryService.createCategory(catData);

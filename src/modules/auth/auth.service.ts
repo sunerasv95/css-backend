@@ -1,9 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 
-import { UserService } from '../user/user.service';
-import { EncryptionService } from '../encryption/encryption.service';
+import { UserService } from "../user/user.service";
+import { EncryptionService } from "../encryption/encryption.service";
+import { UserLoginDto } from "./dto/user-login.dto";
+import { throwError } from "rxjs";
 
 @Injectable()
 export class AuthService {
@@ -13,14 +14,21 @@ export class AuthService {
 		private readonly encrptionService: EncryptionService
 	) {}
 
-	async validateUser(username: string, pass: string) {
-		let user = await this.userService.findUserByUsername(username);
-		if (!user)
-			return new HttpException("User not found", HttpStatus.UNAUTHORIZED);
+	async loginUser(payload: UserLoginDto) {
+			const user = await this.validateUser(payload.username, payload.password);
+			return await this.generateToken(user);
+	}
 
-		let passwordsMatched = await this.encrptionService.comparePassword(pass, user.password);
+	async validateUser(username: string, pass: string) {
+		const user = await this.userService.findUserByUsername(username);
+		if (!user ) throw new UnauthorizedException();
+
+		let passwordsMatched = await this.encrptionService.comparePassword(
+			pass,
+			user.password
+		);
 		if (!passwordsMatched) {
-			return new HttpException(
+			throw new HttpException(
 				"Passwords are not matched",
 				HttpStatus.UNAUTHORIZED
 			);
@@ -30,12 +38,9 @@ export class AuthService {
 	}
 
 	async generateToken(user: any) {
-		//generateJWT
 		const payload = { username: user.username, sub: user.user };
 		return {
-			access_token: this.jwtService.signAsync(payload),
+			access_token: await this.jwtService.signAsync(payload),
 		};
 	}
-
-	
 }
