@@ -1,4 +1,5 @@
-import { IsEmpty, IsNumber, IsString } from 'class-validator';
+import { IsDecimal, IsEmpty, IsNumber, IsString } from 'class-validator';
+import { Double } from 'typeorm';
 
 export class CreateListDto{
 
@@ -13,6 +14,10 @@ export class CreateListDto{
     @IsEmpty()
     @IsNumber()
     listType: number
+
+    @IsEmpty()
+    @IsDecimal()
+    listPrice: Double
 
     @IsEmpty()
     @IsNumber()
@@ -33,4 +38,8 @@ export class CreateListDto{
     @IsEmpty()
     @IsNumber()
     brand: number
+
+    @IsEmpty()
+    @IsNumber()
+    pricingOption: number
 }

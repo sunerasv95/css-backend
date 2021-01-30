@@ -11,6 +11,8 @@ import { Brand } from "../brand/brand.entity";
 import { Category } from "../category/category.entity";
 import { Member } from "../member/member.entity";
 import { MemberRepository } from "../member/member.repository";
+import { PricingOption } from "../pricing-option/pricing-option.entity";
+import { PricingOptionRepository } from "../pricing-option/pricing-option.repository";
 import { CreateListDto } from "./dto/create-list.dto";
 import { ListingIdDto } from "./dto/list-id.dto";
 import { UpdateListDto } from "./dto/update-list.dto";
@@ -28,7 +30,9 @@ export class ListingService {
 		@InjectRepository(Brand)
 		private readonly brandRepository: MemberRepository,
 		@InjectRepository(Member)
-		private readonly memberRepository: MemberRepository
+		private readonly memberRepository: MemberRepository,
+		@InjectRepository(PricingOption)
+		private readonly pricingOptRepository: PricingOptionRepository
 	) {}
 
 	async findAllCategories(): Promise<Listing[]> {
@@ -41,24 +45,36 @@ export class ListingService {
 
 	async createListing(data: CreateListDto): Promise<Listing> {
 		let relations = [];
+		let pricingArr: PricingOption[] = [];
 
 		try {
 			const member = await this.memberRepository.findOne({ id: data.member }); // member should retreive from the request/session
 			relations["member"] = member;
 
+			//category
 			const category = await this.categoryRepository.findOne({
 				id: data.category,
 				isDeleted: 0,
 			});
-			if (!category)
+			if (!category){
 				throw new HttpException("Category is not found", HttpStatus.NOT_FOUND);
+				return;
+			}
 			relations["category"] = category;
 
+			//brand
 			const brand = await this.brandRepository.findOne({ id: data.brand });
 			if (!brand)
 				throw new HttpException("Brand is not found", HttpStatus.NOT_FOUND);
 			relations["brand"] = brand;
 
+			//pricing option
+			const pricing = await this.pricingOptRepository.findOne({ id: data.pricingOption });
+			if (!pricing){
+				throw new HttpException("Pricing option is not found", HttpStatus.NOT_FOUND);
+			}
+			relations["pricingOption"] = pricing;
+			
 			return await this.listingRepository.createNew(data, relations);
 		} catch (error) {
 			throw new InternalServerErrorException(error);

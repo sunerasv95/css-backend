@@ -14,6 +14,7 @@ import { RolesGuard } from './modules/role/guards/roles.guard';
 import { MemberService } from './modules/member/member.service';
 import { MemberController } from './modules/member/member.controller';
 import { MemberModule } from './modules/member/member.module';
+import { PricingOptionModule } from './modules/pricing-option/pricing-option.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { MemberModule } from './modules/member/member.module';
     BrandModule,
     UserModule,
     MemberModule,
+    PricingOptionModule,
   ],
   // providers: [
   //   {

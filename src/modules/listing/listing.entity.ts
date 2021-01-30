@@ -1,13 +1,10 @@
-import { BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Double, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import { slugify, makeRef} from "src/common/helpers";
 import { Brand } from "../brand/brand.entity";
 import { Category } from '../category/category.entity';
 import { Member } from "../member/member.entity";
-// export enum ListType {
-//     SALE = "1",
-//     RENT = "2"
-// }
+import { PricingOption } from "../pricing-option/pricing-option.entity";
 
 @Entity()
 export class Listing{
@@ -28,6 +25,9 @@ export class Listing{
 
     @Column({ type : 'tinyint' })
     listType: number
+
+    @Column({ type: 'double', precision: 18, scale: 2 })
+    listPrice: Double
 
     @Column({ type : 'tinyint' , default: 0 })
     isFeatured: number
@@ -64,6 +64,16 @@ export class Listing{
 
     @ManyToOne(() => Brand, brand => brand.listings)
     brand: Category
+
+    @OneToOne(() => PricingOption)
+    @JoinColumn()
+    pricingOption: PricingOption
+
+    // @ManyToMany(() => PricingOption)
+    // @JoinTable({ 
+    //     name: 'listing_pricing_option'
+    // })
+    // pricingOptions: PricingOption[]
 
     @BeforeInsert()
     async saveSlug(){

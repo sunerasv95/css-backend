@@ -8,6 +8,7 @@ import { CategoryRepository } from './../category/category.repository';
 import { CategoryModule } from './../category/category.module';
 import { MemberRepository } from '../member/member.repository';
 import { BrandRepository } from '../brand/brand.repository';
+import { PricingOptionRepository } from '../pricing-option/pricing-option.repository';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { BrandRepository } from '../brand/brand.repository';
       ListingRepository, 
       CategoryRepository,
       MemberRepository,
-      BrandRepository
+      BrandRepository,
+      PricingOptionRepository
     ]),
   ],
   controllers: [ListingController],

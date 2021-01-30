@@ -27,9 +27,11 @@ export class ListingRepository extends Repository<Listing> {
 			newListing.title = data.title;
 			newListing.description = data.description;
 			newListing.listType = data.listType;
+			newListing.listPrice = data.listPrice;
 			newListing.member = relations["member"];
 			newListing.category = relations["category"];
 			newListing.brand = relations["brand"];
+			newListing.pricingOption = relations["pricingOption"];
 			newListing.status = 1;
 
 			return await this.save(newListing);

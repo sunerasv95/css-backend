@@ -21,7 +21,7 @@ export default class User {
     password: string
 
     @Column({ type: 'tinyint', default: 0 })
-    IsEmailVerified: number
+    isEmailVerified: number
 
     @Column({ type: 'tinyint', default: 1 })
     isActive: number
@@ -30,7 +30,7 @@ export default class User {
     isDeleted: number
 
     @Column({ type: 'timestamp', default: null })
-    EmailVerifiedAt: Date
+    emailVerifiedAt: Date
 
     @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date
