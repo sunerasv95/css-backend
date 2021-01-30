@@ -14,6 +14,9 @@ import { CreateCatDto } from './dto/create-category.dto';
 import { CatIdDto } from './dto/category-id.dto';
 import { UpdateCatDto } from './dto/update-category.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../role/decorators/roles.decorators';
+import { Role } from '../role/types/roles.enums';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 
 @Controller('api/categories')
 export class CategoryController {
@@ -24,12 +27,13 @@ export class CategoryController {
     return await this.categoryService.findAllCategories();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getOne(@Param('id') id: number): Promise<Category> {
     return await this.categoryService.findOneCategory(id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() catData: CreateCatDto): Promise<Category> {
     return await this.categoryService.createCategory(catData);
