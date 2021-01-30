@@ -1,12 +1,12 @@
 //slug generating helper
-export function slugify(string) {
+export const slugify = async function(string): Promise<string> {
   const a =
     'àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;';
   const b =
     'aaaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz------';
   const p = new RegExp(a.split('').join('|'), 'g');
 
-  return string
+  return await string
     .toString()
     .toLowerCase()
     .replace(/\s+/g, '-') // Replace spaces with -
@@ -16,4 +16,19 @@ export function slugify(string) {
     .replace(/\-\-+/g, '-') // Replace multiple - with single -
     .replace(/^-+/, '') // Trim - from start of text
     .replace(/-+$/, ''); // Trim - from end of text
+}
+
+
+// export async function usernameGenerator(sourceTxt:string) {
+
+// }
+
+export const makeRef = async function(length) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }
