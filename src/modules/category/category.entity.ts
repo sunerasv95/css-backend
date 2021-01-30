@@ -46,12 +46,12 @@ export class Category{
     listings: []
 
     @BeforeInsert()
-    saveSlug(){
-        this.slug = slugify(this.name);
+    async saveSlug(){
+        this.slug = await slugify(this.name);
     }
 
     @BeforeUpdate()
-    updateSlug(){
-        this.slug = slugify(this.name);
+    async updateSlug(){
+        this.slug = await slugify(this.name);
     }
 }
