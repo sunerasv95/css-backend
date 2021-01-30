@@ -1,42 +1,77 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { Category } from "src/modules/category/category.entity";
+import {
+	HttpException,
+	HttpStatus,
+	Injectable,
+	InternalServerErrorException,
+	NotFoundException,
+} from "@nestjs/common";
+import { from } from "rxjs";
 import { EntityRepository, Repository } from "typeorm";
+import { CreateListDto } from "./dto/create-list.dto";
 
 import { Listing } from "./listing.entity";
+import { slugify } from "./../../common/helpers";
+import { UpdateListDto } from "./dto/update-list.dto";
+import { ListingIdDto } from "./dto/list-id.dto";
 
 @Injectable()
 @EntityRepository(Listing)
 export class ListingRepository extends Repository<Listing> {
-    async createNew(data: Listing): Promise<Listing>{
-        let category, catId = null;
-        let entity = new Listing();
+	async createNew(
+		data: CreateListDto,
+		relations: any[] = []
+	): Promise<Listing> {
+		try {
+			let newListing = new Listing();
 
-        catId = data.category;
-        category = await this.findOne(catId);
+			newListing.title = data.title;
+			newListing.description = data.description;
+			newListing.listType = data.listType;
+			newListing.member = relations["member"];
+			newListing.category = relations["category"];
+			newListing.brand = relations["brand"];
+			newListing.status = 1;
 
-        entity.title            = data.title;
-        entity.description      = data.description;
-        entity.slug             = data.slug;
-        entity.listType         = data.listType;
-        entity.referenceNumber  = data.referenceNumber;
-        entity.category         = category;
-        entity.publishedAt      = data.publishedAt;
-        entity.isActive         = data.isActive;
+			return await this.save(newListing);
+		} catch (error) {
+			throw new InternalServerErrorException(error);
+		}
+	}
 
-        return await this.save(entity);
-    }
+	async updateExisting(
+		id: string,
+		data: UpdateListDto,
+		relations: string[] = []
+	): Promise<Listing> {
+		try {
+			const updateListing = await this.findOne({ id: id });
+			if (!updateListing)
+				throw new HttpException("Listing is not found", HttpStatus.NOT_FOUND);
 
-    async updateExisting(id: string, data: Listing): Promise<Listing>{
-        await this.update({ id: id } , data );
-        return await this.findOne(id);
-    }
+			if (data.title) updateListing.title = data.title;
+			if (data.description) updateListing.description = data.description;
+			if (data.listType) updateListing.listType = data.listType;
+			if (data.category) updateListing.category = relations["category"];
+			if (data.brand) updateListing.brand = relations["brand"];
 
-    async deleteExisting(data: Listing): Promise<any>{
-        let result = await this.delete(data.id);
-        if(result.affected == 0) {
-            throw new NotFoundException('Listing couldn\'t found');
-        }else{
-            return { deleted: true };
-        }
-    }
+			await this.update({ id: id }, updateListing);
+			return updateListing;
+		} catch (error) {
+			throw new InternalServerErrorException(error);
+		}
+	}
+
+	async deleteExisting(data: ListingIdDto): Promise<any> {
+		try {
+			let result = await this.softDelete({ id: data.listId });
+			if (result.affected == 0) {
+				throw new NotFoundException("Listing couldn't found");
+			} else {
+				await this.update({ id: data.listId }, { isDeleted: 1 });
+				return { deleted: true };
+			}
+		} catch (error) {
+			throw new InternalServerErrorException(error);
+		}
+	}
 }

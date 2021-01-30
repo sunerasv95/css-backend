@@ -6,12 +6,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ListingRepository } from './listing.repository';
 import { CategoryRepository } from './../category/category.repository';
 import { CategoryModule } from './../category/category.module';
+import { MemberRepository } from '../member/member.repository';
+import { BrandRepository } from '../brand/brand.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       ListingRepository, 
-      CategoryRepository
+      CategoryRepository,
+      MemberRepository,
+      BrandRepository
     ]),
   ],
   controllers: [ListingController],
