@@ -7,6 +7,8 @@ import { JwtModule } from "@nestjs/jwt";
 import { JwtStrategy } from "./jwt.strategy";
 import { ConfigService } from "@nestjs/config";
 import { EncryptionModule } from "../encryption/encryption.module";
+import { RolesGuard } from "../role/guards/roles.guard";
+import { JwtAuthGuard } from "./guards/jwt.guard";
 
 @Module({
 	imports: [
@@ -14,6 +16,8 @@ import { EncryptionModule } from "../encryption/encryption.module";
 		UserModule,
 		PassportModule.register({
 			defaultStrategy: "jwt",
+			property: 'user',
+			session: false
 		}),
 		JwtModule.registerAsync({
 			imports: [ConfigService],
@@ -28,7 +32,12 @@ import { EncryptionModule } from "../encryption/encryption.module";
 			}),
 		}),
 	],
-	providers: [JwtStrategy, AuthService],
+	providers: [
+		JwtStrategy, 
+		AuthService,
+		// RolesGuard,
+		// JwtAuthGuard
+	],
 	controllers: [AuthController],
 	exports: [AuthService, PassportModule],
 })
