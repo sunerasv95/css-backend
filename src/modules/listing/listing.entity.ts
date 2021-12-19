@@ -1,88 +1,107 @@
-import { BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Double, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+	BeforeInsert,
+	BeforeUpdate,
+	Column,
+	CreateDateColumn,
+	DeleteDateColumn,
+	Double,
+	Entity,
+	JoinColumn,
+	JoinTable,
+	ManyToMany,
+	ManyToOne,
+	OneToMany,
+	OneToOne,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn
+} from "typeorm";
 
-import { slugify, makeRef} from "src/common/helpers";
+import { slugify } from "./../../common/helpers";
 import { Brand } from "../brand/brand.entity";
-import { Category } from '../category/category.entity';
-import { Member } from "../member/member.entity";
-import { PricingOption } from "../pricing-option/pricing-option.entity";
+import { Category } from "../category/category.entity";
+import { TradeType } from "../trade-type/trade-type.entity";
+import { TradeMode } from "../trade-type/enums/trade-mode.enum";
+import { Board } from "../board/board.entity";
+import { Accessory } from "../accessory/accessory.entity";
 
-@Entity()
-export class Listing{
-    @PrimaryGeneratedColumn('uuid')
-    id: string
+@Entity({ name: "trade_listings" })
+export class Listing {
+	@PrimaryGeneratedColumn()
+	id: number;
 
-    @Column({ type: 'varchar', length: 200 })
-    listingRefNo: string
+	@Column({ type: "varchar", length: 200 })
+	listingTitle: string;
 
-    @Column({ type: 'varchar', length: 200 })
-    title: string
+	@Column({ type: "varchar", length: 200, unique: true })
+	listingSlug: string;
 
-    @Column({ type: 'varchar', length: 200 })
-    slug: string
+	@Column({ type: "varchar", length: 600 })
+	listingDescription: string;
 
-    @Column({ type: 'varchar', length: 600 })
-    description: string
+	@Column({ type: "simple-enum", enum: TradeMode })
+	tradeType: string;
 
-    @Column({ type : 'tinyint' })
-    listType: number
+	@Column({ type: "tinyint", default: 0 })
+	isFeatured: number;
 
-    @Column({ type: 'double', precision: 18, scale: 2 })
-    listPrice: Double
+	@Column({ type: "tinyint", default: 0 })
+	isPaid: number;
 
-    @Column({ type : 'tinyint' , default: 0 })
-    isFeatured: number
+	@Column({ type: "tinyint", default: 0 })
+	isUrgent: number;
 
-    @Column({ type : 'tinyint', default: 0  })
-    isPaid: number
+	@Column({ type: "tinyint" })
+	status: number;
 
-    @Column({ type : 'tinyint', default: 0 })
-    isUrgent: number
+	@Column({ type: "tinyint", default: 0 })
+	isDeleted: number;
 
-    @Column({ type : 'tinyint' })
-    status: number
+	@Column({ type: "timestamp", default: null })
+	publishedAt: Date;
 
-    @Column({ type : 'tinyint', default: 0 })
-    isDeleted: number
+	@CreateDateColumn({ type: "timestamp" })
+	createdAt: Date;
 
-    @Column({ type: 'timestamp', default: null })
-    publishedAt: Date
+	@UpdateDateColumn({ type: "timestamp" })
+	updatedAt: Date;
 
-    @CreateDateColumn({ type: 'timestamp' })
-    createdAt: Date
+	@DeleteDateColumn({ type: "timestamp" })
+	deletedAt: Date;
 
-    @UpdateDateColumn({ type: 'timestamp' })
-    updatedAt: Date
+	@Column({ type: "varchar", nullable: true })
+	detailableType: string
 
-    @DeleteDateColumn({ type: 'timestamp' })
-    deletedAt: Date
+	@Column({ type: "int", nullable: true })
+	detailableId: number
 
-    @ManyToOne(() => Member, mem => mem.listings)
-    member: Member
+	@Column({ type: 'int', default: 0})
+	memberId: number
 
-    @ManyToOne(() => Category, cat => cat.listings)
-    category: Category
+	@Column({ type: 'int'})
+	categoryId: number
 
-    @ManyToOne(() => Brand, brand => brand.listings)
-    brand: Category
+	@ManyToOne(() => Category, cat => cat.listings)
+	category: Category
 
-    @OneToOne(() => PricingOption)
-    @JoinColumn()
-    pricingOption: PricingOption
+	@OneToOne(() => Board, board => board.listing)
+	board: Board
 
-    // @ManyToMany(() => PricingOption)
-    // @JoinTable({ 
-    //     name: 'listing_pricing_option'
-    // })
-    // pricingOptions: PricingOption[]
+	@OneToOne(() => Accessory, accessory => accessory.listing)
+	accessory: Accessory
 
-    @BeforeInsert()
-    async saveSlug(){
-        this.slug = await slugify(this.title);
-    }
+	// @ManyToOne(() => Member, mem => mem.listings)
+	// member: Member
 
-    @BeforeInsert()
-    async saveReference(){
-        this.listingRefNo =  await makeRef(8);
-    }
-        
+	// @ManyToOne(() => TradeType, tradeType => tradeType.listings)
+	// tradeType: TradeType
+
+	// @BeforeInsert()
+	// async saveSlug() {		
+	// 	this.listingSlug = await slugify(this.listingTitle);
+	// }
+
+	// @BeforeUpdate() 
+	// 	async updateSlug() {
+	// 		this.listingSlug = await slugify(this.listingTitle);
+	// 	}
 }

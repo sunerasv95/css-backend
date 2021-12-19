@@ -1,11 +1,12 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Base } from "../base/base.entity";
 import { Listing } from "../listing/listing.entity";
 
 import User from "../user/user.entity";
-import { Gender } from "./types/gender.enum";
+// import { Gender } from "../boards/types/gender.enum";
 
-@Entity()
-export class Member {
+@Entity({ name: 'members' })
+export class Member extends Base{
 
     @PrimaryGeneratedColumn()
     id: number
@@ -19,8 +20,8 @@ export class Member {
     @Column({ type: 'varchar', length: 100 , default: ''})
     displayName: string
 
-    @Column({ type: 'simple-enum', enum: Gender })
-    gender: string
+    // @Column({ type: 'simple-enum', enum: Gender })
+    // gender: string
 
     @Column({ type: 'varchar', length: 200, default: '' })
     bio: string
@@ -37,19 +38,12 @@ export class Member {
     @Column({ type: 'timestamp' })
     joinedAt: Date
 
-    @CreateDateColumn({ type: 'timestamp' })
-    createdAt: Date
-
-    @UpdateDateColumn({ type: 'timestamp' })
-    updatedAt: Date
-
-    @DeleteDateColumn({ type: 'timestamp' })
-    deletedAt: Date
+    
 
     @OneToOne(() => User, user => user.member)
     @JoinColumn()
     user: User
 
-    @OneToMany(() => Listing, list => list.member)
-    listings: []
+    // @OneToMany(() => Listing, list => list.member)
+    // listings: []
 }

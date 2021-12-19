@@ -8,72 +8,56 @@ import { EntityRepository, Repository } from "typeorm";
 
 import { Category } from "./category.entity";
 import { CreateCatDto } from "./dto/create-category.dto";
-import { CatIdDto } from "./dto/category-id.dto";
 import { UpdateCatDto } from "./dto/update-category.dto";
 
 @Injectable()
 @EntityRepository(Category)
 export class CategoryRepository extends Repository<Category> {
-	async createNew(catData: CreateCatDto): Promise<Category> {
-		let parentId,
-			parent = null;
-		let isParent = 1;
-
-		try {
-			const entity = new Category();
-
-			//find parent
-			parentId = catData.parent;
-			if (parentId !== 0) {
-				parent = await this.findOne(parentId);
-				isParent = 0;
-			}
-
-			entity.name = catData.name;
-			entity.description = catData.description;
-			entity.isParent = isParent;
-			entity.parent = parent;
-			entity.isActive = 1;
-
-			return await this.save(entity);
-		} catch (error) {
-			throw new InternalServerErrorException(error);
-		}
+	async findBySlug(categorySlug: string) {
+		return await this.findOne({ categorySlug });
 	}
 
-	async updateExisting(id: number, updateData: UpdateCatDto): Promise<Category> {
-		try {
-			const updateEntity = await this.findOne(id);
-			if (!updateEntity) {
-				throw new NotFoundException("Category couldn't be found");
-			}
-
-			if (updateData.name) updateEntity.name = updateData.name;
-			if (updateData.description)
-				updateEntity.description = updateData.description;
-			if (updateData.isParent) updateEntity.isParent = updateData.isParent;
-			if (updateData.parent) updateEntity.parent = updateData.parent;
-			if (updateData.active) updateEntity.isActive = updateData.active;
-
-			await this.update({ id }, updateEntity);
-			return updateEntity;
-		} catch (error) {
-			throw new InternalServerErrorException(error);
-		}
+	async findParent(id: number) {
+		return await this.findOne({ id, isParent: 1 });
 	}
 
-	async deleteExisting(data: CatIdDto): Promise<any> {
-		try {
-			let result = await this.softDelete({ id: data.categoryId });
+	async createCategory(data: CreateCatDto): Promise<Category> {
+		const { categoryName, parentId, isParent, parent, isActive } = data;
 
-			if (result.affected == 0) {
-				throw new NotFoundException("Category couldn't be found");
-			} else {
-				await this.update({ id: data.categoryId }, { isDeleted: 1 });
-				return { deleted: true };
-			}
-		} catch (error) {
-			throw new InternalServerErrorException(error);
-		}
+		const entity = new Category();
+
+		entity.categoryName = categoryName;
+		entity.isParent = isParent;
+		entity.parent = parent;
+		entity.isActive = isActive;
+
+		return await this.save(entity);
+	}
+
+	async updateCategory(updateData: UpdateCatDto): Promise<Category> {
+		return await this.save(updateData);
+	}
+
+	// async deleteExisting(id: number): Promise<any> {
+	// 	try {
+	// 		let result = await this.softDelete({ id });
+
+	// 		if (result.affected == 0) {
+	// 			throw new NotFoundException("Category couldn't be found");
+	// 		} else {
+	// 			await this.update({ id }, { isDeleted: 1 });
+	// 			return { deleted: true };
+	// 		}
+	// 	} catch (error) {
+	// 		throw new InternalServerErrorException(error);
+	// 	}
+	// }
+
+	async softDeleteCategory(id: number) {
+		return await this.softDelete({ id });
+	}
+
+	async updateIsDeleted(id: number) {
+		return await this.update({ id }, { isDeleted: 1 });
 	}
 }

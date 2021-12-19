@@ -5,7 +5,7 @@ import { UpdatePricingDto } from './dto/update-pricing.dto';
 import { PricingOption } from './pricing-option.entity';
 import { PricingOptionService } from './pricing-option.service';
 
-@Controller('api/pricing-options')
+@Controller('pricing-options')
 export class PricingOptionController {
     constructor(private readonly pricingOptService: PricingOptionService) {}
 

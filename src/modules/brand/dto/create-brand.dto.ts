@@ -1,13 +1,20 @@
-import { IsEmpty, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEmpty, IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+
+const defaultLogo = "https://picsum.photos/200/300";
 
 export class CreateBrandDto{
 
-    @IsEmpty()
+    // @IsEmpty()
     @IsString()
-    name: string;
+    readonly brandName: string
 
-    @IsEmpty()
+    //@IsEmpty()
+    @IsNotEmpty()
     @IsString()
-    description: string
+    readonly brandLogoImgUrl: string
+
+    //@IsEmpty()
+    @IsInt()
+    readonly isActive: number
 
 }

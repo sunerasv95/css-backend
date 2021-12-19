@@ -1,5 +1,5 @@
 import { IsEmpty, IsEnum, IsString } from 'class-validator';
-import { Gender } from '../types/gender.enum';
+// import { Gender } from '../../boards/types/gender.enum';
 
 export class MemberRegisterDto {
 
@@ -25,7 +25,7 @@ export class MemberRegisterDto {
 
     @IsEmpty()
     @IsString()
-    @IsEnum(Gender)
+    // @IsEnum(Gender)
     gender: string
 
    

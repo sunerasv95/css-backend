@@ -1,14 +1,5 @@
-import { IsInt, IsString } from "class-validator";
+import { PartialType } from "@nestjs/mapped-types";
+import { IsInt, IsNotEmpty, IsString } from "class-validator";
+import { CreateBrandDto } from "./create-brand.dto";
 
-export class UpdateBrandDto{
-
-    @IsString()
-    name: string;
-
-    @IsString()
-    description: string;
-
-    @IsInt()
-    active: number;
-
-}
+export class UpdateBrandDto extends PartialType(CreateBrandDto) {}

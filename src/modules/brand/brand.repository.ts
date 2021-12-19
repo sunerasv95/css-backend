@@ -10,51 +10,37 @@ import { UpdateBrandDto } from './dto/update-brand.dto';
 
 @EntityRepository(Brand)
 export class BrandRepository extends Repository<Brand> {
-  async createNew(catData: CreateBrandDto): Promise<Brand> {
-    try {
+
+  async findBrandBySlug(brandSlug: string) {
+		return await this.findOne({ brandSlug });
+	}
+
+  async createBrand(data: CreateBrandDto): Promise<Brand> {
+      const {
+        brandName,
+        brandLogoImgUrl,
+        isActive
+      } = data;
+
       const entity = new Brand();
 
-      entity.name = catData.name;
-      entity.description = catData.description;
-      entity.isActive = 1;
+      entity.brandName = brandName;
+      entity.brandLogoImgUrl = brandLogoImgUrl;
+      entity.isActive = isActive;
 
       return await this.save(entity);
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
   }
 
-  async updateExisting(id: number, updateData: UpdateBrandDto): Promise<Brand> {
-    try {
-      const updateEntity = await this.findOne(id);
-      if (!updateEntity) {
-        throw new NotFoundException("Brand couldn't be found");
-      }
-
-      if (updateData.name) updateEntity.name = updateData.name;
-      if (updateData.description)
-        updateEntity.description = updateData.description;
-      if (updateData.active) updateEntity.isActive = updateData.active;
-
-      await this.update({ id }, updateEntity);
-      return updateEntity;
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+  async updateBrand(updateData: UpdateBrandDto){
+    return await this.save(updateData);
   }
 
-  async deleteExisting(data: BrandIdDto): Promise<any> {
-    try {
-      let result = await this.softDelete({ id: data.brandId });
-
-      if (result.affected == 0) {
-        throw new NotFoundException("Category couldn't be found");
-      } else {
-        await this.update({ id: data.brandId }, { isDeleted: 1 });
-        return { deleted: true };
-      }
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+  async softDeleteBrand(id: number) {
+    return await this.softDelete({ id });
   }
+
+  async updateIsDeleted(id: number){
+    return await this.update({ id }, { isDeleted: 1 });
+  }
+
 }

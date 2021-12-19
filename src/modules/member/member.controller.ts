@@ -3,7 +3,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { MemberRegisterDto } from './dto/member-register.dto';
 import { MemberService } from './member.service';
 
-@Controller('api/member')
+@Controller('members')
 export class MemberController {
     
     constructor(private readonly memberService: MemberService) {}

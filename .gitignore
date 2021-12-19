@@ -1,5 +1,7 @@
 #config
 .env
+/config/default.json
+/config/gcloud.config.json
 
 # compiled output
 /dist

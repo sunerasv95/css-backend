@@ -1,6 +1,6 @@
 import { IsEmpty, IsString } from 'class-validator';
 
-import { Gender } from 'src/modules/member/types/gender.enum';
+// import { Gender } from 'src/modules/member/types/gender.enum';
 
 export class CreateUserDto{
 

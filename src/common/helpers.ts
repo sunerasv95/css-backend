@@ -18,6 +18,10 @@ export const slugify = async function(string): Promise<string> {
     .replace(/-+$/, ''); // Trim - from end of text
 }
 
+export const getCurrentTimestamp = (): number => {
+  return Date.now()
+}
+
 
 // export async function usernameGenerator(sourceTxt:string) {
 

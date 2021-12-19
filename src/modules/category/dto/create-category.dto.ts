@@ -1,16 +1,22 @@
-import { IsEmpty, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEmpty, IsInt, IsString } from 'class-validator';
+import { Category } from '../category.entity';
 
 export class CreateCatDto{
 
     @IsEmpty()
     @IsString()
-    name: string;
+    categoryName: string;
+
+    @IsInt()
+    isParent?: number
 
     @IsEmpty()
-    @IsString()
-    description: string
+    @IsInt()
+    parentId: number
 
-    @IsEmpty()
-    @IsNumber()
-    parent: number
+    parent: Category
+
+    @IsInt()
+    isActive: number
+
 }

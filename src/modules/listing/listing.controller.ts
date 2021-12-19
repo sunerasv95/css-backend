@@ -1,44 +1,52 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { CreateListDto } from './dto/create-list.dto';
-import { UpdateListDto } from './dto/update-list.dto';
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Param,
+	Patch,
+	Post,
+	UseFilters,
+} from "@nestjs/common";
+import { CreateListDto } from "./dto/create-list.dto";
+import { UpdateListDto } from "./dto/update-list.dto";
 
-import { Listing } from './listing.entity';
-import { ListingService } from './listing.service';
-import { ListingIdDto } from './dto/list-id.dto'
+import { Listing } from "./listing.entity";
+import { ListingService } from "./listing.service";
+import { ListingIdDto } from "./dto/list-id.dto";
+import { GlobalExceptionFilter } from "src/common/filters/global-exception.filter";
+import { HttpExceptionFilter } from "src/common/filters/http-exception.filter";
 
-@Controller('api/listings')
+@Controller("listings")
+// @UseFilters(GlobalExceptionFilter)
 export class ListingController {
-    constructor(private readonly listingService: ListingService) {}
+	constructor(private readonly listingService: ListingService) {}
 
-  @Get()
-  async getAll(): Promise<Listing[]> {
-    return await this.listingService.findAllCategories();
-  }
+	@Get()
+	async getAll(): Promise<Listing[]> {
+		return await this.listingService.findAllListings();
+	}
 
-  @Get(':id')
-  async getOne(@Param('id') id: string): Promise<Listing> {
-    return await this.listingService.findOneListing(id);
-  }
+	@Get(":id")
+	async getOne(@Param("id") id: number): Promise<Listing> {
+		return await this.listingService.findListingById(id);
+	}
 
-  @Post()
-  async create(@Body() data: CreateListDto): Promise<Listing> {
-    return await this.listingService.createListing(data);
-  }
+	@Post()
+	async create(@Body() reqData: CreateListDto): Promise<any> {
+		return await this.listingService.createNewListing(reqData);
+	}
 
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() data: UpdateListDto): Promise<Listing> {
-    return await this.listingService.updateListing(id, data);
-  }
+	@Patch(":id")
+	async update(
+		@Param("id") id: number,
+		@Body() data: UpdateListDto
+	): Promise<boolean> {
+		return await this.listingService.updateExistListing(id, data);
+	}
 
-  @Delete()
-  async delete(@Body() data: ListingIdDto): Promise<any> {
-    return await this.listingService.deleteListing(data);
-  }
+	// @Delete(":id")
+	// async delete(@Param("id") id: number): Promise<any> {
+	// 	return await this.listingService.deleteExisting(id);
+	// }
 }
-
-
-//to-do: 
-
-// * add jwt auth middleware
-// * role base authorization
-// * response

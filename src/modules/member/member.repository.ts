@@ -4,7 +4,7 @@ import User from "../user/user.entity";
 import { MemberRegisterDto } from "./dto/member-register.dto";
 
 import { Member } from "./member.entity";
-import { Gender } from "./types/gender.enum";
+// import { Gender } from "../boards/types/gender.enum";
 
 @Injectable()
 @EntityRepository(Member)
@@ -14,7 +14,7 @@ export class MemberRepository extends Repository<Member> {
 
         newMember.firstName = memberData.firstName;
         newMember.lastName = memberData.lastName;
-        newMember.gender = memberData.gender as Gender;
+        // newMember.gender = memberData.gender as Gender;
         newMember.joinedAt = new Date();
         newMember.user  = newUser;
         

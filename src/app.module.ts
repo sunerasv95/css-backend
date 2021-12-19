@@ -11,10 +11,19 @@ import { UserModule } from './modules/user/user.module';
 import { EncryptionModule } from './modules/encryption/encryption.module';
 import { TypeOrmConfigService } from './config/db/typeorm-config.service';
 import { RolesGuard } from './modules/role/guards/roles.guard';
-import { MemberService } from './modules/member/member.service';
-import { MemberController } from './modules/member/member.controller';
 import { MemberModule } from './modules/member/member.module';
 import { PricingOptionModule } from './modules/pricing-option/pricing-option.module';
+import { FileUploadModule } from './modules/file-upload/file-upload.module';
+// import { BoardModule } from './modules/board/board.module';
+import { BoardModule } from './modules/board/board.module';
+import { WaveModule } from './modules/wave/wave.module';
+import { MadeofModule } from './modules/madeof/madeof.module';
+import { TradeTypesModule } from './modules/trade-type/trade-type.module';
+import { FinTypeModule } from './modules/fin-type/fin-type.module';
+import { AccessoryModule } from './modules/accessory/accessory.module';
+import { AdminModule } from './modules/admin/admin.module';
+import { PermissionModule } from './modules/permission/permission.module';
+import { RoleModule } from './modules/role/role.module';
 
 @Module({
   imports: [
@@ -32,7 +41,21 @@ import { PricingOptionModule } from './modules/pricing-option/pricing-option.mod
     UserModule,
     MemberModule,
     PricingOptionModule,
+    FileUploadModule,
+    BoardModule,
+    WaveModule,
+    MadeofModule,
+    TradeTypesModule,
+    FinTypeModule,
+    AccessoryModule,
+    AdminModule,
+    RoleModule,
+    PermissionModule,
+    RoleModule,
+    // BoardModule,
   ],
+  controllers: [],
+  providers: [],
   // providers: [
   //   {
   //     provide: APP_GUARD,

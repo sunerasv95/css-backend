@@ -1,49 +1,41 @@
-import { slugify } from "src/common/helpers";
+import { slugify } from "./../../common/helpers"
 import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Base } from "../base/base.entity";
 import { Listing } from "../listing/listing.entity";
+import { Board } from "../board/board.entity";
+import { Accessory } from "../accessory/accessory.entity";
 
-@Entity()
-export class Brand{
+@Entity({ name: 'brands' })
+export class Brand extends Base {
+
     @PrimaryGeneratedColumn()
     id: number
 
     @Column({ length: 150, type: 'varchar'})
-    name: string
+    brandName: string
 
     @Column({ length: 150, type: 'varchar', unique: true })
-    slug: string
-
-    @Column({ length: 255 , type: 'varchar'})
-    description: string
+    brandSlug: string
 
     @Column({ type: 'varchar', length: 200, default: ""})
     brandLogoImgUrl: string
 
-    @Column({ type: 'tinyint', default: 1 })
-    isActive: number
 
-    @Column({ type: 'tinyint', default: 0 })
-    isDeleted: number
+    //-------------------------------------------------------------------
 
-    @CreateDateColumn({ type: 'timestamp' })
-    createdAt: Date
+    @OneToMany(() => Board, board => board.brand)
+    boards: Board[]
 
-    @UpdateDateColumn({ type: 'timestamp' })
-    updatedAt: Date
-
-    @DeleteDateColumn({ type: 'timestamp' })
-    deletedAt: Date
-   
-    @OneToMany(() => Listing, lst => lst.brand)
-    listings: []
+    @OneToMany(() => Accessory, accessory => accessory.brand)
+    accessories: Accessory[]
 
     @BeforeInsert()
     async saveSlug(){
-        this.slug = await slugify(this.name);
+        this.brandSlug = await slugify(this.brandName);
     }
 
     @BeforeUpdate()
     async updateSlug(){
-        this.slug = await slugify(this.name);
+        this.brandSlug = await slugify(this.brandName);
     }
 }

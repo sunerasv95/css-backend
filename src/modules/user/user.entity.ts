@@ -2,7 +2,7 @@ import { BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Entity, OneTo
 import { hashSync } from 'bcrypt';
 import { Member } from "../member/member.entity";
 
-@Entity()
+@Entity({ name: 'users' })
 export default class User {
 
     @PrimaryGeneratedColumn()

@@ -1,41 +1,26 @@
+import { slugify } from "src/common/helpers";
 import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent, UpdateDateColumn } from "typeorm";
+import { Base } from "../base/base.entity";
 
-import { Listing } from "src/modules/listing/listing.entity";
-import { slugify } from '../../common/helpers';
+import { Listing } from "../listing/listing.entity";
 
-@Entity()
+@Entity({ name: 'categories' })
 @Tree('nested-set')
-export class Category{
+export class Category extends Base{
+    
     @PrimaryGeneratedColumn()
     id: number
 
     @Column({ length: 150, type: 'varchar'})
-    name: string
+    categoryName: string
 
     @Column({ length: 150, type: 'varchar', unique: true })
-    slug: string
-
-    @Column({ length: 255 , type: 'varchar'})
-    description: string
+    categorySlug: string
 
     @Column({ type: 'tinyint'})
     isParent: number
 
-    @Column({ type: 'tinyint', default: 1 })
-    isActive: number
-
-    @Column({ type: 'tinyint', default: 0 })
-    isDeleted: number
-
-    @CreateDateColumn({ type: 'timestamp' })
-    createdAt: Date
-
-    @UpdateDateColumn({ type: 'timestamp' })
-    updatedAt: Date
-
-    @DeleteDateColumn({ type: 'timestamp' })
-    deletedAt: Date
-
+    
     @TreeParent()
     parent: Category
 
@@ -43,15 +28,15 @@ export class Category{
     children: Category[]
    
     @OneToMany(() => Listing, lst => lst.category)
-    listings: []
+    listings: Promise<Listing[]>
 
     @BeforeInsert()
     async saveSlug(){
-        this.slug = await slugify(this.name);
+        this.categorySlug = await slugify(this.categoryName);
     }
 
     @BeforeUpdate()
     async updateSlug(){
-        this.slug = await slugify(this.name);
+        this.categorySlug = await slugify(this.categoryName);
     }
 }

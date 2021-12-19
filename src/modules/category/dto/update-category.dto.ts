@@ -1,19 +1,6 @@
+import { PartialType } from "@nestjs/mapped-types";
 import { IsEmpty, IsInt, IsNumber, IsString } from "class-validator";
+import { Category } from "../category.entity";
+import { CreateCatDto } from "./create-category.dto";
 
-export class UpdateCatDto{
-
-    @IsString()
-    name: string;
-
-    @IsString()
-    description: string;
-
-    @IsInt()
-    isParent: number;
-
-    @IsInt()
-    active: number;
-
-    parent: any;
-
-}
+export class UpdateCatDto extends PartialType(CreateCatDto){}
