@@ -7,7 +7,7 @@ import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 	constructor(private readonly configService: ConfigService) {}
 	
-	createTypeOrmOptions(): TypeOrmModuleOptions {
+	createTypeOrmOptions(): TypeOrmModuleOptions {	
 		return {
 			namingStrategy: new SnakeNamingStrategy(),
 			type: this.configService.get<string>("DATABASE_TYPE") as "mysql",
@@ -16,8 +16,13 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 			username: this.configService.get<string>("DATABASE_USERNAME"),
 			password: this.configService.get<string>("DATABASE_PASSWORD"),
 			database: this.configService.get<string>("DATABASE_NAME"),
-			entities: [__dirname + "/../../**/*.entity{.ts,.js}"],
-			synchronize: true,
+			entities: [__dirname + "/../**/*.entity{.ts,.js}"],
+			migrations: [ "migration/*.js" ],
+    		cli: {
+        		"migrationsDir": "migration"
+			},
+			synchronize: true
+			//autoLoadEntities: true
 		};
 	}
 }

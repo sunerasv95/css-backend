@@ -13,6 +13,7 @@ import { UpdateCatDto } from "./dto/update-category.dto";
 @Injectable()
 @EntityRepository(Category)
 export class CategoryRepository extends Repository<Category> {
+	
 	async findBySlug(categorySlug: string) {
 		return await this.findOne({ categorySlug });
 	}
@@ -23,7 +24,8 @@ export class CategoryRepository extends Repository<Category> {
 
 	async createCategory(data: CreateCatDto): Promise<Category> {
 		const { categoryName, parentId, isParent, parent, isActive } = data;
-
+		console.log("cat", data);
+		
 		const entity = new Category();
 
 		entity.categoryName = categoryName;

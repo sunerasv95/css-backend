@@ -43,9 +43,7 @@ export class RoleService {
     //     }
     // }
 
-    async createRole(createRoleDto: CreateRoleDto): Promise<Role>{
-        let savedRole: Role = null;
-
+    async createRole(createRoleDto: CreateRoleDto): Promise<any>{
         try {
             const {
                 roleName,
@@ -67,7 +65,6 @@ export class RoleService {
                 newRole.isActive = 1;
                 newRole.isDeleted = 0;
                 newRole.permissions = permissionsToSave;
-                //console.log("per", permissionsToSave);
                 
                await manager.save(newRole);
 
@@ -76,10 +73,10 @@ export class RoleService {
             throw error;
         }
 
-        return savedRole;
+        return {created: true};
     }
 
-    generateRoleCode (): string {
+    private generateRoleCode (): string {
         let postFix = getCurrentTimestamp().toString();
         postFix = postFix.slice(5, 12);
         return "ARM"+ postFix;

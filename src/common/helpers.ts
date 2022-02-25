@@ -1,3 +1,4 @@
+import {genSaltSync, hashSync } from 'bcrypt';
 //slug generating helper
 export const slugify = async function(string): Promise<string> {
   const a =
@@ -35,4 +36,10 @@ export const makeRef = async function(length) {
      result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
+}
+
+export const encryptPassword = async function(plaintextPassword){
+  const salt = genSaltSync(10);
+  const hash = hashSync(plaintextPassword, salt);
+  return hash;
 }

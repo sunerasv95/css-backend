@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Base } from "../base/base.entity";
 
-@Entity({ name: 'permissions '})
+@Entity({ name: 'permissions'})
 export class Permission extends Base {
     @PrimaryGeneratedColumn()
     id: number
@@ -11,6 +11,5 @@ export class Permission extends Base {
 
     @Column({ type: 'varchar', length: 50})
     permissionSlug: string
-
 
 }

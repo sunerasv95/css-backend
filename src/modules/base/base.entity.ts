@@ -2,18 +2,30 @@ import { Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from "ty
 
 export class Base {
 
-    @Column({ type: 'tinyint', default: 1})
+    @Column({ 
+        type: 'tinyint', 
+        default: 1
+    })
     isActive: number
 
-    @Column({ type: 'tinyint', default: 0 })
+    @Column({ 
+        type: 'tinyint', 
+        default: 0 
+    })
     isDeleted: number
 
-    @CreateDateColumn({ type: 'datetime' })
+    @CreateDateColumn({ 
+        type: 'datetime'  
+    })
     createdAt: Date
 
-    @UpdateDateColumn({ type: 'datetime'})
+    @UpdateDateColumn({ 
+        type: 'datetime' 
+    })
     updatedAt: Date
 
-    @DeleteDateColumn({type: 'datetime'})
+    @DeleteDateColumn({
+        type: 'datetime' 
+    })
     deletedAt: Date
 } 

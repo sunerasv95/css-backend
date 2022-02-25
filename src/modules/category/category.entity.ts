@@ -5,7 +5,7 @@ import { Base } from "../base/base.entity";
 import { Listing } from "../listing/listing.entity";
 
 @Entity({ name: 'categories' })
-@Tree('nested-set')
+// @Tree('nested-set')
 export class Category extends Base{
     
     @PrimaryGeneratedColumn()

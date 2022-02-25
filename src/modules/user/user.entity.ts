@@ -41,8 +41,8 @@ export default class User {
     @DeleteDateColumn({ type: 'timestamp' })
     deletedAt: Date
 
-    @OneToOne(() => Member, mem => mem.user)
-    member: Member
+    // @OneToOne(() => Member, mem => mem.user)
+    // member: Member
 
     @BeforeInsert()
     async hashPassword(){

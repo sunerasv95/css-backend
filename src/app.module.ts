@@ -9,7 +9,7 @@ import { BrandModule } from './modules/brand/brand.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { EncryptionModule } from './modules/encryption/encryption.module';
-import { TypeOrmConfigService } from './config/db/typeorm-config.service';
+import { TypeOrmConfigService } from './config/typeorm-config.service';
 import { RolesGuard } from './modules/role/guards/roles.guard';
 import { MemberModule } from './modules/member/member.module';
 import { PricingOptionModule } from './modules/pricing-option/pricing-option.module';
@@ -55,14 +55,6 @@ import { RoleModule } from './modules/role/role.module';
     // BoardModule,
   ],
   controllers: [],
-  providers: [],
-  // providers: [
-  //   {
-  //     provide: APP_GUARD,
-  //     useClass: RolesGuard
-  //   },
-  //   MemberService
-  // ],
-  // controllers: [MemberController]
+  providers: []
 })
 export class AppModule {}
